@@ -26,8 +26,8 @@ def load_backbone(model_name="resnet101", chkpt=None):
     
 def get_model_detection(num_classes, 
                         model_name="resnet101", 
-                        aspect_ratios = (0.5, 1.0, 2.0),
-                        anchor_sizes  = ((32,), (64,), (128,), (256,), (512,)), 
+                        aspect_ratios=(0.5, 1.0, 2.0),
+                        anchor_sizes=((32,), (64,), (128,), (256,), (512,)), 
                         backbone_chkpt=None,
                         model_chkpt=None,
                         train_backbone=True,
