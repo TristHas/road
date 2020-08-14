@@ -143,14 +143,44 @@ class PadResize(object):
         return img, target
     
 from bbaug.policies import policies
+from bbaug.policies.policies import POLICY_TUPLE
+
+def default_policy():
+    """
+    Version of the policies used in the paper
+    :rtype: List[List[POLICY_TUPLE_TYPE]]
+    :return: List of policies
+    """
+    policy = [
+      [
+          POLICY_TUPLE('Shear_Y',    .4, 4),
+          POLICY_TUPLE('Color',      .4, 1),
+          POLICY_TUPLE('Sharpness',  .4, 1),
+          POLICY_TUPLE('Rotate',     .2, 2),
+          POLICY_TUPLE('Equalize',   .2, 1),
+      ],
+      [
+          POLICY_TUPLE('Shear_Y',    .4, 4),
+          POLICY_TUPLE('Color',      .4, 1),
+          POLICY_TUPLE('Sharpness',  .4, 1),
+          POLICY_TUPLE('Rotate',     .4, 1),
+          POLICY_TUPLE('Brightness', .3, 3),
+      ],
+    ]
+    return policy
 
 class AugPolicy():
-    def __init__(self, policy_id=0):
+    def __init__(self, policy_id=default_policy):
         """
         """
-        policy = getattr(policies, policies.list_policies()[policy_id])
-        self.container = policies.PolicyContainer(policies.policies_v3())
-
+        if isinstance(policy_id, int):
+            policy = getattr(policies, policies.list_policies()[policy_id])
+            self.container = policies.PolicyContainer(policy())
+        elif callable(policy_id):
+            self.container = policies.PolicyContainer(policy_id())
+        else:
+            raise Exception
+            
     def __call__(self, img, tgt):
         """
         """
