@@ -7,7 +7,6 @@ import numpy as np
 import torch
 
 import transforms as T
-import utils
 from config import data_path as base_path
 
 # Base helpers
@@ -232,6 +231,9 @@ class RoadDamageDataset(object):
     def nclass(self):
         return len(set(self.category_names))
     
+def collate_fn(batch):
+    return tuple(zip(*batch))
+    
 def load_det_dataset(mode="class", split_name="base",
                      transforms=None, 
                      batch_size=8, num_workers=8):
@@ -246,10 +248,10 @@ def load_det_dataset(mode="class", split_name="base",
     # data loaders
     data_loader = torch.utils.data.DataLoader(
         dataset, batch_size=batch_size, shuffle=True, 
-        num_workers=num_workers, collate_fn=utils.collate_fn
+        num_workers=num_workers, collate_fn=collate_fn
     )
     data_loader_test = torch.utils.data.DataLoader(
         dataset_test, batch_size=batch_size, shuffle=False, 
-        num_workers=num_workers, collate_fn=utils.collate_fn
+        num_workers=num_workers, collate_fn=collate_fn
     )
     return data_loader, data_loader_test
